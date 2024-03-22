@@ -23,7 +23,6 @@ body {
   margin: 0;
 }
 
-
 /* Set default to allow responsiveness */
 a {
   color: var(--black);
@@ -315,6 +314,7 @@ img {
 /* SeachBar */
 .searchBar {
   visibility: hidden;
+  /* moves the element vertically on the Y-axis. In this case, it's moving the element 100 pixels up from its original position */
   transform: translateY(-100px);
   background-color: var(--black);
   padding: 4px 0;
@@ -324,6 +324,7 @@ img {
 }
 
 .searchBar.open {
+  /* is means the element moves back to its original position, effectively sliding down into view. */
   transform: translateY(0);
   transition: transform 0.1s;
 }

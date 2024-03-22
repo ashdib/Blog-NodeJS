@@ -5,7 +5,10 @@ const express = require('express');
 const app = express();
 const PORT = process.env.PORT || 3000;
 const expressLayout = require('express-ejs-layouts');
+const connectDB = require("./server/config/db");
 
+// Connect to database
+connectDB(); 
 // serve the public folder for style, image and js
 app.use(express.static('public'));
 
