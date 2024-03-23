@@ -1,21 +1,8 @@
-<!-- Home Page -->
-
 <div class="author">
-  <h1 class="author__heading">Hi, I am Ashdib.</h1>
-  <p class="author__body">Web Developer and Farmer</p>
+  <h1 class="author__heading">Search Results</h1>
 </div>
 
-<img
-  src="/img/hero-image.webp"
-  alt="person see a star thrguh window"
-  class="hero-image"
-  width="981"
-  height="528"
-/>
-
-<!-- Render the list of articles on the home page -->
 <section class="articles">
-  <h2 class="articles__heading">Latest Posts</h2>
   <ul class="article-ul">
     <% data.forEach(post => { %>
 
@@ -31,9 +18,4 @@
     </li>
     <% }) %>
   </ul>
-
-  <!-- TODO: Pagination UI Display -->
-  <% if (nextPage !== null) { %>
-  <a href="/?page=<%=nextPage%>" class="pagination">&lt; View Older Posts</a>
-  <% } %>
 </section>

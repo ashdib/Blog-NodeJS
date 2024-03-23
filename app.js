@@ -9,6 +9,9 @@ const connectDB = require("./server/config/db");
 
 // Connect to database
 connectDB(); 
+
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
 // serve the public folder for style, image and js
 app.use(express.static('public'));
 

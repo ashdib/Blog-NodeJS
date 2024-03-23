@@ -3,13 +3,13 @@ const router = express.Router();
 const Post = require("../models/Post");
 
 router.get("", async (req, res) => {
-  const locals = {
-    title: "NodeJS Blog",
-    description:
-      "Simple blog web application with NodeJS, ExpressJS and MongoDB.",
-  };
-
   try {
+    const locals = {
+      title: "NodeJS Blog",
+      description:
+        "Simple blog web application with NodeJS, ExpressJS and MongoDB.",
+    };
+
     // TODO: Create pagination for the posts
     let perPage = 6;
     let page = req.query.page || 1;
@@ -23,6 +23,7 @@ router.get("", async (req, res) => {
 
     /**
      * Retrieves aggregated data from the database.
+     * Retrieve the data posts from the database and sort them in descending order based on the creation timestamp.
      * @returns {Promise<AggregatedData>} The aggregated data.
      */
     const data = await Post.aggregate([{ $sort: { createdAt: -1 } }])
@@ -56,7 +57,7 @@ router.get("/about", (req, res) => {
 /**
  * Get /
  * Post : id **/
-// TODO: Connect every post's article to a page contain the content/body of the post of the post
+// TODO: Connect every post's article with a LINK to a page contain the content/body of the post of the post
 router.get("/post/:id", async (req, res) => {
   try {
     const slug = req.params.id;
@@ -67,6 +68,40 @@ router.get("/post/:id", async (req, res) => {
         "Simple blog web application with NodeJS, ExpressJS and MongoDB.",
     };
     res.render("post.ejs", { locals, data });
+  } catch (error) {
+    console.log(error);
+  }
+});
+
+/**
+ * Search Form for post
+ * POST /
+ * Post : searchTerm **/
+router.post("/search", async (req, res) => {
+  try {
+    const locals = {
+      title: "NodeJS Blog",
+      description:
+        "Simple blog web application with NodeJS, ExpressJS and MongoDB.",
+    };
+    let searchTerm = req.body.searchTerm;
+    // Remove special characters from the search term
+    const searchNoSpecialChar = searchTerm.replace(/[^a-zA-Z0-9]/g, "");
+    // Perform a query to search for the post that contains the search term
+    const data = await Post.find({
+      // OR operation on array of two or more expressions and selects the documents that satisfy at least one of the expressions.
+      $or: [
+        // It matches documents where the title field matches the regular expression
+        // The "i" flag makes the search case-insensitive.
+        { title: { $regex: new RegExp(searchNoSpecialChar, "i") } },
+        { body: { $regex: new RegExp(searchNoSpecialChar, "i") } },
+      ],
+    });
+    res.render("search", { data,locals });
+
+    // res.send(searchTerm);
+    // With only this code, the searchTerm is unable to pass data to frontend
+    // To pass the data we need to navigate to app.js
   } catch (error) {
     console.log(error);
   }
