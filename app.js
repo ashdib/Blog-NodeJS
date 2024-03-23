@@ -26,6 +26,8 @@ app.set("view engine", "ejs");
 
 // connect to the routes with middleware
 app.use("/", require("./server/routes/main"));
+// connect to the admin routes
+app.use("/", require("./server/routes/admin"));
 
 
 app.listen(PORT, ()=>{
