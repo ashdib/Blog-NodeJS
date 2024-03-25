@@ -1,19 +1,38 @@
-require('dotenv').config();
+require("dotenv").config();
 
-
-const express = require('express');
+const express = require("express");
 const app = express();
 const PORT = process.env.PORT || 3000;
-const expressLayout = require('express-ejs-layouts');
+const expressLayout = require("express-ejs-layouts");
+const session = require("express-session");
 const connectDB = require("./server/config/db");
-
+const cookieParser = require("cookie-parser");
+// Store session in the MongoDB
+const MongoStore = require("connect-mongo");
 // Connect to database
-connectDB(); 
+connectDB();
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 // serve the public folder for style, image and js
-app.use(express.static('public'));
+app.use(express.static("public"));
+// cookie parser for create session when user login
+app.use(cookieParser());
+// session middleware
+app.use(
+  session({
+    secret: "keyboard cat",
+    resave: false,
+    saveUninitialized: true,
+    store: MongoStore.create({
+      mongoUrl: process.env.MONGODB_URL,
+    }),
+    //setTime for the cookie session
+    // cookie: {
+    //   maxAge: 1000 * 60 * 60 * 24, // 1 day
+    // },
+  })
+);
 
 // Templating engine
 // Initialise middleware of expressLayout and set the default layout tho the main.js at layout folder
@@ -29,7 +48,6 @@ app.use("/", require("./server/routes/main"));
 // connect to the admin routes
 app.use("/", require("./server/routes/admin"));
 
-
-app.listen(PORT, ()=>{
-    console.log(`App is running on port ${PORT}`);
-})
+app.listen(PORT, () => {
+  console.log(`App is running on port ${PORT}`);
+});
