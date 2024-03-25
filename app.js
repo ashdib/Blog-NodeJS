@@ -4,6 +4,7 @@ const express = require("express");
 const app = express();
 const PORT = process.env.PORT || 3000;
 const expressLayout = require("express-ejs-layouts");
+const methodOverride = require("method-override");
 const session = require("express-session");
 const connectDB = require("./server/config/db");
 const cookieParser = require("cookie-parser");
@@ -14,10 +15,12 @@ connectDB();
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+
 // serve the public folder for style, image and js
 app.use(express.static("public"));
 // cookie parser for create session when user login
 app.use(cookieParser());
+app.use(methodOverride("_method"));
 // session middleware
 app.use(
   session({

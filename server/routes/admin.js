@@ -146,6 +146,72 @@ router.post("/add-post", async (req, res) => {
 });
 
 /**
+ *  GET /
+ * Admin - Update Post Page
+ * Guarded by authMiddleware
+ * * */
+router.get("/edit-post/:id", async (req, res) => {
+  try {
+    const locals = {
+      title: "Add Post",
+      description:
+        "Simple blog web application with NodeJS, ExpressJS and MongoDB.",
+    };
+    const data = await Post.findOne({ _id: req.params.id });
+    res.render("admin/edit-post", {
+      data,
+      locals,
+      layout: adminLayout,
+    });
+  } catch (error) {
+    console.log(error);
+  }
+});
+
+/**
+ *  PUT /
+ * Admin - Update Post Page
+ * Guarded by authMiddleware
+ * * */
+router.put("/edit-post/:id", async (req, res) => {
+  try {
+    await Post.findByIdAndUpdate(req.params.id, {
+      title: req.body.title,
+      body: req.body.body,
+      updatedAt: Date.now(),
+    });
+    res.redirect(`/edit-post/${req.params.id}`);
+  } catch (error) {
+    console.log(error);
+  }
+});
+
+/**
+ *  DELETE /
+ * Admin - Delete
+ * Guarded by authMiddleware
+ * * */
+router.delete("/delete-post/:id", async (req, res) => {
+  try {
+    await Post.deleteOne({ _id: req.params.id });
+    res.redirect("/dashboard");
+  } catch (error) {
+    console.log(error);
+  }
+});
+
+/**
+ *  GET /
+ * Admin - Logout
+ * Guarded by authMiddleware
+ * * */
+router.get("/logout", async (req, res) => {
+  res.clearCookie("token");
+  // res.json({ message: "Logout Successful" });
+  res.redirect("/");
+});
+
+/**
  * POST /
  * Admin - Register
  * * */
