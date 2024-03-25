@@ -112,11 +112,34 @@ router.get("/add-post", async (req, res) => {
         "Simple blog web application with NodeJS, ExpressJS and MongoDB.",
     };
     const data = await Post.find();
-    res.render("admin/dashboard", {
+    res.render("admin/add-post", {
       locals,
       layout: adminLayout,
       data,
     });
+  } catch (error) {
+    console.log(error);
+  }
+});
+
+/**
+ * POST /
+ * Admin - Create New Post
+ * Guarded by authMiddleware
+ * * */
+router.post("/add-post", async (req, res) => {
+  try {
+    try {
+      //TODO: Insert the post to the database
+      const newPost = new Post({
+        title: req.body.title,
+        body: req.body.body,
+      });
+      await Post.create(newPost);
+      res.redirect("/dashboard");
+    } catch (error) {
+      console.log(error);
+    }
   } catch (error) {
     console.log(error);
   }
