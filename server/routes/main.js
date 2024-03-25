@@ -44,6 +44,7 @@ router.get("", async (req, res) => {
       data,
       current: page,
       nextPage: hasNextPage ? nextPage : null,
+      currentRoute: "/",
     });
   } catch (error) {
     console.log(error);
@@ -51,7 +52,9 @@ router.get("", async (req, res) => {
 });
 
 router.get("/about", (req, res) => {
-  res.render("about.ejs");
+  res.render("about.ejs", {
+    currentRoute: `/post/${slug}`,
+  });
 });
 
 /**
@@ -66,6 +69,7 @@ router.get("/post/:id", async (req, res) => {
       title: data.title,
       description:
         "Simple blog web application with NodeJS, ExpressJS and MongoDB.",
+      currentRoute: `/post/${slug}`,
     };
     res.render("post.ejs", { locals, data });
   } catch (error) {
@@ -97,7 +101,7 @@ router.post("/search", async (req, res) => {
         { body: { $regex: new RegExp(searchNoSpecialChar, "i") } },
       ],
     });
-    res.render("search", { data,locals });
+    res.render("search", { data, locals });
 
     // res.send(searchTerm);
     // With only this code, the searchTerm is unable to pass data to frontend

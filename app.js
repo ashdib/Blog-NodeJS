@@ -8,6 +8,7 @@ const methodOverride = require("method-override");
 const session = require("express-session");
 const connectDB = require("./server/config/db");
 const cookieParser = require("cookie-parser");
+const {isActiveRoute} = require("./server/helpers/routeHelpers");
 // Store session in the MongoDB
 const MongoStore = require("connect-mongo");
 // Connect to database
@@ -45,7 +46,7 @@ app.use(expressLayout);
 app.set("layout", "./layouts/main");
 // set the frontend which is ejs
 app.set("view engine", "ejs");
-
+app.locals.isActiveRoute = isActiveRoute;
 // connect to the routes with middleware
 app.use("/", require("./server/routes/main"));
 // connect to the admin routes
